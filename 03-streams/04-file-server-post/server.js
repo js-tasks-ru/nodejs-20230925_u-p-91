@@ -8,9 +8,9 @@ const server = new http.Server();
 
 server.on('request', async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
-  const pathname = url.pathname.slice(1);
+  const pathname = decodeURI(url.pathname.slice(1));
   let streamFile = null;
-  let limitedStream = null;
+  let limitedStream = null;   
 
 
   req.on('aborted', async () => {
@@ -19,7 +19,7 @@ server.on('request', async (req, res) => {
       streamFile.destroy();
       limitedStream.destroy()
       try {
-        await fs.promises.unlink(path.join(__dirname, "files", pathname));
+        await fs.promises.unlink(filepath);
       }catch(err) {
         console.log(err);
       }
@@ -59,7 +59,7 @@ server.on('request', async (req, res) => {
       } finally {
 
         try {
-          await fs.promises.access(path.join(__dirname, "files", pathname));
+          await fs.promises.access(filepath);
           
           res.statusCode = 409;
           res.end("File exist");
@@ -77,7 +77,8 @@ server.on('request', async (req, res) => {
             res.statusCode = 413;
             try {
               streamFile.destroy()
-              return await fs.promises.unlink(path.join(__dirname, "files", pathname))
+              await fs.promises.unlink(filepath);
+              console.log("DELETE FILE");
             }catch(err) {
               res.statusCode = 500;
               console.log(err)
@@ -100,7 +101,7 @@ server.on('request', async (req, res) => {
           });
           streamFile.on("close", _ => {
             console.log("close streamFile");
-            
+                
             return res.end();
           });
         }
