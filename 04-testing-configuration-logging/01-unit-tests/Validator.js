@@ -34,6 +34,12 @@ class Validator {
 
   validate(obj) {
     const errors = [];
+
+    if (Object.prototype.toString.call(obj) !== '[object Object]') {
+      errors.push({error: `argument is not an object`});
+      return errors;
+    }
+
     const objKeys = Object.keys(obj);
     const arrKeysRule = Object.keys(this.rules);
 

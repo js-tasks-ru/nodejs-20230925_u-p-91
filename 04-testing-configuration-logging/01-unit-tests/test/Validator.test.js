@@ -152,6 +152,26 @@ describe('testing-configuration-logging/unit-tests', () => {
       expect(errors[0]).to.have.property('error').and.to.be.equal('no age property on object');
     });
 
+    it('проверка на не переданный объект', () => {
+      const validator = new Validator({
+        name: {
+          type: 'string',
+          min: 1,
+          max: 20
+        },
+        age: {
+          type: 'number', 
+          min: 0,
+          max: 18
+        }
+      });
+
+      const errors = validator.validate();
+
+      expect(errors).to.have.length(1);
+      expect(errors[0]).to.have.property('error').and.to.be.equal('argument is not an object');
+    });
+    
     it('проверка на успешную проверку объекта', () => {
       const validator = new Validator({
         name: {
