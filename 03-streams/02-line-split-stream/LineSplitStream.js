@@ -11,9 +11,9 @@ class LineSplitStream extends stream.Transform {
 
   async _transform(chunk, encoding, callback) {
     
-    let data = chunk.toString(this._encoding);
+    const data = chunk.toString(this._encoding);
 
-    if(~data.indexOf(os.EOL)) {
+    if(data.includes(os.EOL)) {
       let arr = data.split(os.EOL);
 
       for(let i = 0; i < arr.length - 1; i++) {
