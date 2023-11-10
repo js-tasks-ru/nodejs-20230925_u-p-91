@@ -9,17 +9,16 @@ module.exports = async function authenticate(strategy, email, displayName, done)
   try {
     let user = await User.findOne({email});
     
-    if (user) {
-      return done(null, user);
+    if (!user) {
+      user = await User.create({
+        email, displayName,
+      });
     }
-
-    user = await User.create({
-      email, displayName,
-    });
     
-    return done(null, user);
+    done(null, user);
+
   } catch (err) {
     return done(err);
   }
-  done(null, false, `функция аутентификации с помощью ${strategy} не настроена`);
+  // done(null, false, `функция аутентификации с помощью ${strategy} не настроена`);
 };
