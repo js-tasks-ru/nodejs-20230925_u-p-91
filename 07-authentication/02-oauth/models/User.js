@@ -24,9 +24,11 @@ const userSchema = new mongoose.Schema({
   },
   passwordHash: {
     type: String,
+    default: null
   },
   salt: {
     type: String,
+    default: null
   },
 }, {
   timestamps: true,
