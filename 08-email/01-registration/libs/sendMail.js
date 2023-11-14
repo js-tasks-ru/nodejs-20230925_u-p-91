@@ -2,6 +2,7 @@ const juice = require('juice');
 const config = require('../config');
 const path = require('path');
 const pug = require('pug');
+require('dotenv').config()
 
 const nodemailer = require('nodemailer');
 const htmlToText = require('nodemailer-html-to-text').htmlToText;
