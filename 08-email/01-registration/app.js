@@ -11,6 +11,7 @@ const {oauth, oauthCallback} = require('./controllers/oauth');
 const {me} = require('./controllers/me');
 const {register, confirm} = require('./controllers/registration');
 const Session = require('./models/Session');
+const User = require('./models/User');
 
 const app = new Koa();
 
@@ -44,6 +45,20 @@ app.use((ctx, next) => {
 });
 
 const router = new Router({prefix: '/api'});
+const router2 = new Router({prefix: ''});
+
+router2.get('/confirm/:token', async (ctx, next) => {
+  const token = ctx.params.token;
+
+  const user = await User.findOneAndUpdate({verificationToken: token}, { $unset : {"verificationToken": 1}});
+
+  if(!user) {
+    ctx.throw(400, {message: 'Ссылка подтверждения недействительна или устарела'})
+  } else {
+    ctx.login(user)
+    ctx.body = "Success2"
+  }
+});
 
 router.use(async (ctx, next) => {
   const header = ctx.request.get('Authorization');
@@ -78,5 +93,5 @@ router.post('/register', handleMongooseValidationError, register);
 router.post('/confirm', confirm);
 
 app.use(router.routes());
-
+app.use(router2.routes());
 module.exports = app;

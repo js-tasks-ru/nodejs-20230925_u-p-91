@@ -22,7 +22,7 @@ app.use(async (ctx, next) => {
   } catch (err) {
     if (err.status) {
       ctx.status = err.status;
-      ctx.body = {error: err.message};
+      ctx.body = {errors: err.message};
     } else {
       console.error(err);
       ctx.status = 500;
