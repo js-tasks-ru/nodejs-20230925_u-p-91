@@ -6,17 +6,17 @@ module.exports = new LocalStrategy(
     async function(email, password, done) {
       
       try {
-        const user = await User.find({ email });
+        const user = await User.findOne({ email });
         
-        if(!user.length) {
+        if(!user) {
           return done(null, false, 'Нет такого пользователя');
         }
-        let isValidPassword = await user[0].checkPassword(password);
+        let isValidPassword = await user.checkPassword(password);
         if(!isValidPassword) {
           return done(null, false, 'Неверный пароль');
         }
 
-        done(null, user[0])
+        done(null, user)
       } catch(err) {
         return done(err);
       }

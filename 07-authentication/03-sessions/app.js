@@ -51,7 +51,7 @@ router.use(async (ctx, next) => {
     return ctx.throw(401, 'Неверный аутентификационный токен');
   }
 
-  ctx.set('Authorization', userSession.user.token)
+  // ctx.set('Authorization', userSession.user.token)
   ctx.user = userSession.user;
   
   return next();
